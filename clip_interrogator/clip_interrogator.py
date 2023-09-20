@@ -17,7 +17,7 @@ from safetensors.numpy import load_file, save_file
 
 CAPTION_MODELS = {
     'blip-base': 'Salesforce/blip-image-captioning-base',   # 990MB
-    'blip-large': 'Salesforce/blip-image-captioning-large', # 1.9GB
+    'blip-large': '/root/.cache/huggingface/hub/models--Salesforce--blip-image-captioning-large', # 1.9GB
     'blip2-2.7b': 'Salesforce/blip2-opt-2.7b',              # 15.5GB
     'blip2-flan-t5-xl': 'Salesforce/blip2-flan-t5-xl',      # 15.77GB
     'git-large-coco': 'microsoft/git-large-coco',           # 1.58GB
@@ -72,10 +72,12 @@ class Interrogator():
 
     def load_caption_model(self):
         if self.config.caption_model is None and self.config.caption_model_name:
+            print("self.config.caption_model",self.config.caption_model)
             if not self.config.quiet:
                 print(f"Loading caption model {self.config.caption_model_name}...")
 
             model_path = CAPTION_MODELS[self.config.caption_model_name]
+            print("model_path",model_path)
             if self.config.caption_model_name.startswith('git-'):
                 caption_model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float32)
             elif self.config.caption_model_name.startswith('blip2-'):
